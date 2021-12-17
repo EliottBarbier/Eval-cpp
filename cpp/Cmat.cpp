@@ -13,6 +13,18 @@ void Cmat::init(const std::vector<std::vector<float>> &voulu){
 
 }
 
+void Cmat::mat_nulle(const std::pair<int,int> &taille){ //On part d'une Cmat juste initialisée.
+    for(int i=0;i<=taille.first-1;i++){
+        std::vector<float> ligne;
+        for(int j=0;j<=taille.second-1;j++){
+            ligne.push_back(0);
+        }
+        _matrice.push_back(ligne);
+    }
+    _taille=taille;
+}
+
+
 void Cmat::identity(const float &k,const int &taille){
     _taille={taille,taille};
     for(int i=0; i<=taille-1;i++){
@@ -55,9 +67,23 @@ void Cmat::Jp(const float &k, const int &p,std::pair<int,int> &taille){ //On par
         }
         _matrice.push_back(lig);
     }
+}
 
-
-
+void Cmat::diag_sup(const float &k,const std::pair<int,int> &taille){ //On part matrice juste construite vide.
+    
+    for(int i=0;i<=taille.first;i++){
+        std::vector<float> ligne;
+        for(int j=0;j<=taille.second;j++){
+            if(j==i+1){
+                ligne.push_back(1*k);
+            }
+            else{
+                ligne.push_back(0);
+            }
+        }
+        _matrice.push_back(ligne);
+    }
+    _taille=taille;
 }
 
 
@@ -118,6 +144,39 @@ Cmat Cmat::operator*(Cmat &mat){ //C'est bien dans l'ordre, on suppose que le nb
     return(final);
 }
 
+//Cmat Cmat::operator=(Cmat &mat){
+//    Cmat final;
+//    final._matrice=mat._matrice;
+//    final._taille=mat._taille;
+//    return(final);
+//}
+
+Cmat Cmat::scalar(const float &k){
+    Cmat final;
+    for(int i=0; i<=_taille.first-1;i++){
+        std::vector<float> ligne;
+        for(int j=0; j<=_taille.second-1;j++){
+            ligne.push_back(k*_matrice[i][j]);
+        }
+    final._matrice.push_back(ligne);
+    }
+
+    final._taille=_taille;
+    return(final);
+}
+
+
+Cmat Cmat::transpose(){
+    Cmat final;
+    final.mat_nulle({_taille.second,_taille.first});
+
+    for(int i=0;i<= final._taille.first-1;i++){
+        for(int j=0;j<=final._taille.second-1;j++){
+            final._matrice[i][j]=_matrice[j][i];
+        }
+    }
+    return(final);
+}
 
 
 
@@ -136,3 +195,4 @@ void Cmat::affichage_mat(const std::string &Indication){
         std::cout << std::endl;
     }
 }
+
