@@ -2,15 +2,16 @@
 #include <cmath>
 #include <fstream>
 
-
 #include "Euler.h"
+//#include "Système.h"
 
 int main(int arc,char** argv){
 
-float x_max=1;
-int Nx = 100;
+float x_max=1; //x_min=0
+int Nx = 30;
 int Nt=1000;
-float t_max=0.5;
+float t_max=0.5; //t_min=0
+float t0=0;
 float deltat = t_max/Nt;
 float deltax = x_max/Nx;
 
@@ -19,11 +20,13 @@ float deltax = x_max/Nx;
 Cmat K;
 Cmat id;
 Cmat mat_sup;
-id.identity(-2,Nx);
+
+id.identity(-2,Nx); //Le -2 vient du fait que l'on a pris un certain D(x)=1
 mat_sup.diag_sup(1,{Nx,Nx});
 Cmat trans=mat_sup.transpose();
 K = ((id + mat_sup) + trans);
 //
+
 //Définissons T0:
 Cmat T0;
 std::vector<std::vector<float>> voulu2;
@@ -33,24 +36,50 @@ for(int i = 0; i<=Nx-1;i++){
     voulu2.push_back(ligne);
 }
 T0.init(voulu2);
+std::cout<< T0.get_shape().first << " Et " << T0.get_shape().second <<std::endl;
 //
 
-//K.affichage_mat("Test K");
-Cmat T;
-T=Euler_explicit(T0,K,Nt,deltat);
-T.affichage_mat("Retour Euler");
+K.affichage_mat("Test K");
+
+std::pair<std::vector<Cmat>, std::vector<float>> Euler;
+Euler = Euler_explicit(T0,K,Nt,deltat,t0);
+std::vector<Cmat> T;
+std::vector<float> temps;
+T=Euler.first;
+temps=Euler.second;
+T.back().affichage_mat("Retour Euler");
+
+
 
 std::ofstream Monflux("Euler.txt");
 if(Monflux){
-    std::pair<int,int> taille= T.get_shape();
+    int longueur = T.size();
+    for(int i=0; i<=T.back().get_shape().first;i++){
+        if (i==0){
+            Monflux<< "#Temps ";
+        }
+        else{
+            Monflux<<" x_"<< std::to_string(i-1);
+        }
+    }
+    Monflux<< std::endl;
 
-    for(int i=0;i<=taille.first-1;i++){
-        Monflux << T.get_val(i,0) <<std::endl;
+    for(int k=0; k<=temps.size()-1;k++ ){
+        Monflux<< temps[k] <<" ";
+
+        for(int i=0;i<=T[k].get_shape().first-1;i++){
+            Monflux << T[k].get_val(i,0)<< " ";
+        }
+        Monflux<< std::endl;
+        
     }
 }
 else{
     std::cout<<"Erreur, impossible d'ouvrir le fichier" <<std::endl;
 }
+
+
+
 
 
 

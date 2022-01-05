@@ -24,6 +24,7 @@ public:
 
 
     std::pair<int,int> get_shape();
+    
     Cmat operator+(Cmat &mat);
     Cmat operator*(Cmat &mat);
     Cmat operator-(Cmat &mat);
