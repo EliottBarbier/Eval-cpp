@@ -92,7 +92,7 @@ std::pair<int,int> Cmat::get_shape(){
     return(_taille);
 }
 
-Cmat Cmat::operator+(Cmat &mat){ //On part du principe qu'elles sont de même taille
+Cmat Cmat::operator+(Cmat &mat){ //On part du principe qu'elles sont de même taille, pas en place.
     Cmat final;
     for(int i=0; i <= _taille.first-1;i++){
 
@@ -144,6 +144,18 @@ Cmat Cmat::operator*(Cmat &mat){ //C'est bien dans l'ordre, on suppose que le nb
     return(final);
 }
 
+ Cmat Cmat::operator*(const float &scalar){
+     Cmat final;
+     for(std::vector<float> ligne : _matrice ){
+         std::vector<float> ligne_f;
+         for(float val:ligne){
+            ligne_f.push_back(val*scalar);
+         }
+         final._matrice.push_back(ligne_f);
+     }
+     final._taille=_taille;
+     return(final);
+ }
 //Cmat Cmat::operator=(Cmat &mat){
 //    Cmat final;
 //    final._matrice=mat._matrice;

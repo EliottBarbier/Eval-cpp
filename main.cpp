@@ -41,6 +41,31 @@ std::cout<< T0.get_shape().first << " Et " << T0.get_shape().second <<std::endl;
 
 K.affichage_mat("Test K");
 
+Cmat a2;
+std::vector<std::vector<float>> voulute;
+std::vector<float> ligne1te {1,2};
+std::vector<float> ligne2te {4,5};
+std::vector<float> ligne3te {7,8};
+voulute.push_back(ligne1te);
+voulute.push_back(ligne2te);
+voulute.push_back(ligne3te);
+a2.init(voulute);
+
+float scalar=2;
+
+Cmat c2;
+c2=a2*scalar;
+c2.affichage_mat("a*scalar");
+
+
+
+
+
+
+
+
+
+
 std::pair<std::vector<Cmat>, std::vector<float>> Euler;
 Euler = Euler_explicit(T0,K,Nt,deltat,t0);
 std::vector<Cmat> T;

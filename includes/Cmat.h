@@ -15,6 +15,7 @@ public:
     ~Cmat();
 public:
 
+    //Par effets de bords :
     void identity(const float &k,const int &taille);
     void pleine_time_k(const float &k,std::pair<int,int> &taille);
     void init(const std::vector<std::vector<float>> &voulu);
@@ -27,10 +28,11 @@ public:
     
     Cmat operator+(Cmat &mat);
     Cmat operator*(Cmat &mat);
+    Cmat operator*(const float &scalar);
     Cmat operator-(Cmat &mat);
     //Cmat operator=(Cmat &mat); //En fait elle marche déjà...
 
-    Cmat scalar(const float &k);
+    Cmat scalar(const float &k); //Inutile maintenant
     Cmat transpose();
 
     void affichage_mat(const std::string &Indication);
