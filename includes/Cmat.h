@@ -2,13 +2,15 @@
 #include <utility>
 #include <iostream>
 #include <string>
+#include <stdexcept>
+#include <cmath>
 
-
+#pragma once //Permet de build qu'une seule fois la classe
 class Cmat
 {
 private:
     std::pair<int,int> _taille={0,0};
-    std::vector<std::vector<float>> _matrice;
+    std::vector<std::vector<double>> _matrice;
 
 public:
     Cmat(/* args */);
@@ -16,28 +18,29 @@ public:
 public:
 
     //Par effets de bords :
-    void identity(const float &k,const int &taille);
-    void pleine_time_k(const float &k,std::pair<int,int> &taille);
-    void init(const std::vector<std::vector<float>> &voulu);
-    void Jp(const float &k,const int &p, std::pair<int,int> &taille);
+    void identity(const double &k,const int &taille);
+    void pleine_time_k(const double &k,const std::pair<int,int> &taille);
+    void init(const std::vector<std::vector<double>> &voulu);
+    void Jp(const double &k,const int &p, const std::pair<int,int> &taille);
     void mat_nulle(const std::pair<int,int> &taille);
-    void diag_sup(const float &k,const std::pair<int,int> &taille);
-
+    void diag_sup(const double &k,const std::pair<int,int> &taille);
 
     std::pair<int,int> get_shape();
-    
-    Cmat operator+(Cmat &mat);
-    Cmat operator*(Cmat &mat);
-    Cmat operator*(const float &scalar);
-    Cmat operator-(Cmat &mat);
+    double get_val(const int &i,const int &j);
+    void affichage_mat(const std::string &Indication);
+
+    Cmat operator+(const Cmat &mat) const;
+    Cmat operator*(const Cmat &mat) const;
+    Cmat operator*(const double &scalar)const;
+    Cmat operator-(const Cmat &mat) const;
     //Cmat operator=(Cmat &mat); //En fait elle marche déjà...
 
-    Cmat scalar(const float &k); //Inutile maintenant
+    Cmat scalar(const double &k); //Inutile maintenant
     Cmat transpose();
 
-    void affichage_mat(const std::string &Indication);
-    float get_val(const int &i,const int &j);
-
+    
+    double norme(); //Seulement pour les vecteurs colonnes.
+    void change_value(const int &i,const int &j,const double &value);
 
 };
 

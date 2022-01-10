@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-tab=np.genfromtxt("build/Euler.txt")
+tab=np.genfromtxt("build/Euler_explicit.txt") #Ou implicite
 print(tab.shape)
 temps=tab[:,0]
 T=[]
@@ -11,8 +11,9 @@ T=[]
 for k in range(tab.shape[0]):
     T.append(tab[k,1:])
 
-Nx = 30
-x_max=1
+Nx = 50 #On reporte le nombre de points que l'on a pris : pas obligatoire, pourrait se trouver dans les températures.
+x_max=1 #Ainsi que le x_max 
+
 deltax=x_max/Nx
 
 X=[k*deltax for k in range(Nx)]
@@ -28,6 +29,5 @@ def animate(i):
     #plt.legend()
     return line,
     
-ani = animation.FuncAnimation(fig, animate, frames=len(T), blit=True, interval=5, repeat=True)
-
+ani = animation.FuncAnimation(fig, animate, frames=len(T), blit=True, interval=100 repeat=True)
 plt.show()
