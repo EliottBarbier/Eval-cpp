@@ -241,7 +241,7 @@ void Cmat::change_value(const int &i,const int &j,const double &value){
 
 Cmat Cmat::get_line(const int &i) const{
     if(i<0 or i>=_taille.first){
-        throw std::out_of_range("Indice qui sort de la dimension");
+        throw std::out_of_range("Indice qui sort de la dimension pour get_line");
     }
     std::vector<double> ligne;
     for(int j=0; j<=_taille.second-1; j++){

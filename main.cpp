@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <random>
 
 #include "Euler.h"
 #include "Système.h"
@@ -9,6 +10,7 @@
 int main(int arc,char** argv){
 
 std::string argprin(argv[1]);
+std::string argQ(argv[2]);
 std::cout << argv[1] <<std::endl;
 
 double x_max=1;
@@ -38,8 +40,10 @@ else if(argprin=="test_lim"){
 }
 else{
 
+
 //Définissons K :
 Cmat K;
+if(argQ=="Q1"){
 Cmat id;
 Cmat mat_sup;
 id.identity(-2.,Nx); //Le -2 vient du fait que l'on a pris un certain D(x)=1
@@ -47,7 +51,38 @@ mat_sup.diag_sup(1.,{Nx,Nx});
 K = ((id + mat_sup + mat_sup.transpose())*(1./std::pow(deltax,2.)))*(-1); //La correction par rapport à l'énoncé consiste à
                                                                           // prendre -K. 
 //
-
+}
+else if(argQ=="Q4"){
+    std::random_device rd;
+    std::default_random_engine eng(rd());
+    std::uniform_real_distribution<> distr(0.5, 1.5);
+    std::vector<double> D;
+    for(int i=0;i<=Nx;i++){ //J'en met 1 en plus sinon on ne peut pas def K.
+        D.push_back(distr(eng));
+    }
+    std::vector<std::vector<double>> voulu;
+    for(int i=0; i<=Nx-1;i++){ 
+        std::vector<double> ligne;
+        for(int j=0; j<=Nx-1;j++){
+            if(i==j){
+                ligne.push_back(-D[i]-D[i+1]);
+            }
+            else if (i+1==j){
+                ligne.push_back(D[i+1]);
+            }
+            else if(j==i-1){
+                ligne.push_back(D[i]);
+            }
+            else{
+                ligne.push_back(0.);
+            }
+        }
+        voulu.push_back(ligne);
+    }
+    Cmat K2;
+    K2.init(voulu);
+    K = K2*(-1/pow(deltax,2));
+}
 //Définissons T0:
 Cmat T0;
 std::vector<std::vector<double>> voulu2;
@@ -62,34 +97,32 @@ std::cout<< M_PI << std::endl;
 //
 
 K.affichage_mat("Test K");
+std::cout<< K.get_shape().first << "Et" << K.get_shape().second <<std::endl;
 
-std::pair<std::vector<Cmat>, std::vector<double>> Euler;
-Euler = Euler_explicit(T0,K,Nt,deltat,t_min,CL);
-std::vector<Cmat> T;
-std::vector<double> temps;
-T=Euler.first;
-temps=Euler.second;
+//Génération des résultats pour chaque méthode : Euler explicite, Euler implicite avec et sans le gradient conjugué.
+
+std::pair<std::vector<Cmat>, std::vector<double>> Euler= Euler_explicit(T0,K,Nt,deltat,t_min,CL);
+std::vector<Cmat> T=Euler.first;
+std::vector<double> temps=Euler.second;
 T.back().affichage_mat("Retour Euler");
-
 save_texte(T,temps,"Euler_explicite.txt");
 
-std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp;
-Euler_imp = Euler_implicit(T0,K,Nt,deltat,t_min,CL);
-std::vector<Cmat> T_imp;
-std::vector<double> temps_imp;
-T_imp=Euler_imp.first;
-temps_imp=Euler_imp.second;
+if(argQ=="Q1"){
+std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp =Euler_implicit(T0,K,Nt,deltat,t_min,CL);
+std::vector<Cmat> T_imp =Euler_imp.first;
+std::vector<double> temps_imp =Euler_imp.second;
 T_imp.back().affichage_mat("Retour Euler_imp");
-
 save_texte(T_imp,temps_imp,"Euler_implicite.txt");
-
-std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp2 = Euler_implicit2(T0,K,Nt,deltat,t_min,CL);
-std::vector<Cmat> T_imp2=Euler_imp2.first ;
-std::vector<double> temps_imp2=Euler_imp2.second ;
-T_imp2.back().affichage_mat("Retour Euler_imp2");
-
-save_texte(T_imp,temps_imp,"Euler_implicite2.txt");
-
 }
 
+std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp2 = Euler_implicit_Gauss(T0,K,Nt,deltat,t_min,CL);
+std::vector<Cmat> T_imp2=Euler_imp2.first ;
+std::vector<double> temps_imp2=Euler_imp2.second ;
+T_imp2.back().affichage_mat("Retour Euler_imp_Gauss");
+save_texte(T_imp2,temps_imp2,"Euler_implicite_Gauss.txt");
+
+
+
+
+}
 }

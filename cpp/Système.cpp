@@ -28,11 +28,13 @@ Cmat pivot_gauss(Cmat A){ //Pour trouver sa forme échelonnée réduite
     int r=0;
     std::pair<int,int> taille=A.get_shape();
     for(int j=0;j<=taille.second-1;j++){
-        std::pair<int,int> result=max_col(r+1,j,A);
+        if (r<=taille.first-1){ // r est plus petit que l'indice max de la ligne
+        std::pair<int,int> result=max_col(r,j,A);
         int k = result.first;
-        if(result.second != 0){
-            r=r+1;
-            A.change_line(k,A.get_line(k)*(1/result.second));
+        
+        if(A.get_val(k,j) != 0){
+            
+            A.change_line(k,A.get_line(k)*(1/A.get_val(k,j)));
             if (k!=r){
                 Cmat ligne_inter;
                 ligne_inter=A.get_line(k);
@@ -44,6 +46,8 @@ Cmat pivot_gauss(Cmat A){ //Pour trouver sa forme échelonnée réduite
                 A.change_line(i,A.get_line(i) - A.get_line(r)*(A.get_val(i,j)));
                 }
             }
+            r=r+1; //On incrémente r
+        }
         }
     }
     return(A);
@@ -51,8 +55,8 @@ Cmat pivot_gauss(Cmat A){ //Pour trouver sa forme échelonnée réduite
 
 std::pair<int,float> max_col(const int &i_deb,const int &j, const Cmat &A){
     std::pair<int,int> taille=A.get_shape();
-    double max=abs(A.get_val(0,0));
-    int k=0;
+    double max=abs(A.get_val(i_deb,j));
+    int k=i_deb;
     for(int i=i_deb; i<=taille.first-1;i++){
         if(abs(A.get_val(i,j)) >= max){
             max=abs(A.get_val(i,j));
