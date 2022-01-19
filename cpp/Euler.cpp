@@ -11,10 +11,11 @@ std::pair<std::vector<Cmat>,std::vector<double>> Euler_explicit(Cmat &T0,Cmat &K
     Cmat T;
     T=T0;
     Cmat id;
-    id.identity(1,K.get_shape().first);
+    
     for(int i=1;i<=Nt-1;i++){ //Il faut mettre les conditions limites ! AR car je vais pas vraiment jusqu'à x=1
-
-        T = (id-K*deltat)*T;
+        
+        id.identity(1,K.get_shape().first);
+        T = ((id-K*deltat)*T);
 
         T.change_value(0,0,CL.first);
         T.change_value(T.get_shape().first-1,0,CL.second);
