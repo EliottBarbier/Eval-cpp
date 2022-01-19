@@ -87,7 +87,7 @@ void Cmat::diag_sup(const double &k,const std::pair<int,int> &taille){ //On part
 }
 
 
-std::pair<int,int> Cmat::get_shape(){
+std::pair<int,int> Cmat::get_shape() const{
 
     return(_taille);
 }
@@ -201,7 +201,7 @@ Cmat Cmat::transpose(){
 
 
 
-double Cmat::get_val(const int &i,const int &j){
+double Cmat::get_val(const int &i,const int &j) const{
     if(i>=_taille.first or j>=_taille.second){
         throw std::out_of_range("Les indices sont en dehors de la taille de la matrice");
     }
@@ -236,4 +236,52 @@ void Cmat::change_value(const int &i,const int &j,const double &value){
         throw std::out_of_range("Les indices sont en dehors de la taille de la matrice");
     }
     _matrice[i][j]=value;
+}
+
+
+Cmat Cmat::get_line(const int &i) const{
+    if(i<0 or i>=_taille.first){
+        throw std::out_of_range("Indice qui sort de la dimension");
+    }
+    std::vector<double> ligne;
+    for(int j=0; j<=_taille.second-1; j++){
+        ligne.push_back( _matrice[i][j] );
+    }
+    Cmat final;
+    (final._matrice).push_back(ligne);
+    final._taille={1,_taille.second};
+    return final;
+
+}
+
+void Cmat::change_line(const int &i, const Cmat &ligne){
+    if( ligne.get_shape().first !=1 or ligne.get_shape().second != _taille.second or i<0 or i>=_taille.first){
+        throw std::out_of_range("La ligne n'est pas une ligne, ou a trop de colonne, ou l'indice de la ligne a modifier sort de la matrice");
+    }
+    _matrice[i]=ligne._matrice[0];
+
+}
+
+Cmat Cmat::augmente() const{
+    Cmat final;
+    final._taille={_taille.first,2*_taille.second};
+    
+    for(int i=0; i<=_taille.first-1;i++){
+        std::vector<double> ligne;
+        for(int j=0;j<=2*_taille.second-1;j++){
+            if(j<=_taille.second-1){
+                ligne.push_back(_matrice[i][j]);
+            }
+            else{
+                if(j==i+_taille.second){
+                    ligne.push_back(1);
+                }
+                else{
+                    ligne.push_back(0);
+                }
+            }
+        }
+        final._matrice.push_back(ligne);
+    }
+    return(final);
 }

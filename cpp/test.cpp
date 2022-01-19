@@ -87,7 +87,8 @@ b2.affichage_mat("Ce qu'on a à droite dans le système à 3 inconnues");
 Cmat nullity;
 nullity.mat_nulle({3,1});
 ((grad_conju(M2*(-1),nullity,b2))*(-1)).affichage_mat("TEST GRAD CONJU, on devrait trouver -2.5, -4, -3.5"); //Résoud Ax=b en partant de x0, où A symétrique def positive.
-
+Cmat sol_gauss = sol(M2,b2);
+sol_gauss.affichage_mat("Test pivot de Gauss");
 
 
 }

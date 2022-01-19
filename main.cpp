@@ -4,6 +4,7 @@
 #include "Euler.h"
 #include "Système.h"
 #include "test.h"
+#include "save_txt.h"
 
 int main(int arc,char** argv){
 
@@ -43,7 +44,8 @@ Cmat id;
 Cmat mat_sup;
 id.identity(-2.,Nx); //Le -2 vient du fait que l'on a pris un certain D(x)=1
 mat_sup.diag_sup(1.,{Nx,Nx});
-K = ((id + mat_sup + mat_sup.transpose())*(1./std::pow(deltax,2.)))*(-1);
+K = ((id + mat_sup + mat_sup.transpose())*(1./std::pow(deltax,2.)))*(-1); //La correction par rapport à l'énoncé consiste à
+                                                                          // prendre -K. 
 //
 
 //Définissons T0:
@@ -69,34 +71,7 @@ T=Euler.first;
 temps=Euler.second;
 T.back().affichage_mat("Retour Euler");
 
-
-
-std::ofstream Monflux("Euler_explicite.txt");
-if(Monflux){
-    int longueur = T.size();
-    for(int i=0; i<=T.back().get_shape().first;i++){
-        if (i==0){
-            Monflux<< "#Temps ";
-        }
-        else{
-            Monflux<<" x_"<< std::to_string(i-1);
-        }
-    }
-    Monflux<< std::endl;
-
-    for(int k=0; k<=temps.size()-1;k++ ){
-        Monflux<< temps[k] <<" ";
-
-        for(int i=0;i<=T[k].get_shape().first-1;i++){
-            Monflux << T[k].get_val(i,0)<< " ";
-        }
-        Monflux<< std::endl;
-        
-    }
-}
-else{
-    std::cout<<"Erreur, impossible d'ouvrir le fichier" <<std::endl;
-}
+save_texte(T,temps,"Euler_explicite.txt");
 
 std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp;
 Euler_imp = Euler_implicit(T0,K,Nt,deltat,t_min,CL);
@@ -106,32 +81,15 @@ T_imp=Euler_imp.first;
 temps_imp=Euler_imp.second;
 T_imp.back().affichage_mat("Retour Euler_imp");
 
-std::ofstream Monflux_imp("Euler_implicite.txt");
-if(Monflux_imp){
-    int longueur = T_imp.size();
-    for(int i=0; i<=T_imp.back().get_shape().first;i++){
-        if (i==0){
-            Monflux_imp<< "#Temps ";
-        }
-        else{
-            Monflux_imp<<" x_"<< std::to_string(i-1);
-        }
-    }
-    Monflux_imp<< std::endl;
+save_texte(T_imp,temps_imp,"Euler_implicite.txt");
 
-    for(int k=0; k<=temps_imp.size()-1;k++ ){
-        Monflux_imp<< temps_imp[k] <<" ";
+std::pair<std::vector<Cmat>, std::vector<double>> Euler_imp2 = Euler_implicit2(T0,K,Nt,deltat,t_min,CL);
+std::vector<Cmat> T_imp2=Euler_imp2.first ;
+std::vector<double> temps_imp2=Euler_imp2.second ;
+T_imp2.back().affichage_mat("Retour Euler_imp2");
 
-        for(int i=0;i<=T_imp[k].get_shape().first-1;i++){
-            Monflux_imp << T_imp[k].get_val(i,0)<< " ";
-        }
-        Monflux_imp<< std::endl;
-        
-    }
-}
-else{
-    std::cout<<"Erreur, impossible d'ouvrir le fichier" <<std::endl;
-}
+save_texte(T_imp,temps_imp,"Euler_implicite2.txt");
+
 }
 
 }

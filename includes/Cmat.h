@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <cmath>
+#include <fstream>
 
 #pragma once //Permet de build qu'une seule fois la classe
 class Cmat
@@ -25,8 +26,8 @@ public:
     void mat_nulle(const std::pair<int,int> &taille);
     void diag_sup(const double &k,const std::pair<int,int> &taille);
 
-    std::pair<int,int> get_shape();
-    double get_val(const int &i,const int &j);
+    std::pair<int,int> get_shape() const;
+    double get_val(const int &i,const int &j) const;
     void affichage_mat(const std::string &Indication);
 
     Cmat operator+(const Cmat &mat) const;
@@ -38,7 +39,11 @@ public:
     Cmat scalar(const double &k); //Inutile maintenant
     Cmat transpose();
 
-    
+    Cmat get_line(const int &i) const;
+    void change_line(const int &i, const Cmat &ligne); //Par effet de bord, on change A
+    Cmat augmente() const;
+
+
     double norme(); //Seulement pour les vecteurs colonnes.
     void change_value(const int &i,const int &j,const double &value);
 
