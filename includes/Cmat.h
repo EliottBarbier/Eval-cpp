@@ -25,7 +25,8 @@ public:
     void Jp(const double &k,const int &p, const std::pair<int,int> &taille);
     void mat_nulle(const std::pair<int,int> &taille);
     void diag_sup(const double &k,const std::pair<int,int> &taille);
-
+    //
+    
     std::pair<int,int> get_shape() const;
     double get_val(const int &i,const int &j) const;
     void affichage_mat(const std::string &Indication);
@@ -36,12 +37,12 @@ public:
     Cmat operator-(const Cmat &mat) const;
     //Cmat operator=(Cmat &mat); //En fait elle marche déjà...
 
-    Cmat scalar(const double &k); //Inutile maintenant
+    
     Cmat transpose();
 
     Cmat get_line(const int &i) const;
-    void change_line(const int &i, const Cmat &ligne); //Par effet de bord, on change A
-    Cmat augmente() const;
+    void change_line(const int &i, const Cmat &ligne); //Par effet de bord, on change A.
+    Cmat augmente() const; //On renvoie la matrice augmenté (à A on accole l'identité de même taille)
 
 
     double norme(); //Seulement pour les vecteurs colonnes.

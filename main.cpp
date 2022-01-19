@@ -7,22 +7,37 @@
 #include "test.h"
 #include "save_txt.h"
 
+//Fonctionnement du code :
+//Pour le lancer, se rendre dans build et exécuter eval. Au niveau des arguments, eval prend un *char.
+
+//Pour le *char : On met se qu'on veut faire parmi : test_mat, test_euler, test_syst, test_lim, Q1 et Q4
+//test_mat permet de tester le fonctionnement de la classe Cmat
+//test_syst permet de tester le fonctionnement des solveurs de système linéaires.
+//test_lim permet de vérifier si deltat <= deltax^2/2
+//test_euler est vide.
+// Q1 pour que les questions 1 à 3 seront exécutées avec la matrice K symétrique
+// Q4 :Idem mais la matrice K devient alors aléatoire
+
+//Exemples : .\eval Q1 --> lance les premières questions
+//.\eval test_syst --> lance le test des solveurs
+
 int main(int arc,char** argv){
 
 std::string argprin(argv[1]);
-std::string argQ(argv[2]);
+std::string argQ = argprin;
 std::cout << argv[1] <<std::endl;
 
+//Définition des grandeurs du problème :
 double x_max=1;
 double x_min=0;
-int Nx = 20; //30
-int Nt=1000; //1000
-double t_max=0.5;  //0.5
+int Nx = 20; 
+int Nt=1000; 
+double t_max=0.5;
 double t_min=0;
 double deltat = (t_max-t_min)/(Nt-1);
 double deltax = (x_max-x_min)/(Nx-1);
-std::pair<double,double> CL{0.,0.};
-//Deltat = deltax^2/2 est la limite à ne pas franchir sinon ça explose
+std::pair<double,double> CL{0.,0.}; //Les conditions limites
+
 
 
 if(argprin=="test_mat"){
@@ -83,6 +98,7 @@ else if(argQ=="Q4"){
     K2.init(voulu);
     K = K2*(-1/pow(deltax,2));
 }
+
 //Définissons T0:
 Cmat T0;
 std::vector<std::vector<double>> voulu2;
@@ -94,13 +110,14 @@ for(int i = 0; i<=Nx-1;i++){
 T0.init(voulu2);
 std::cout<< T0.get_shape().first << " Et " << T0.get_shape().second <<std::endl;
 std::cout<< M_PI << std::endl;
-//
 
+//Affichage de vérification :
 K.affichage_mat("Test K");
 std::cout<< K.get_shape().first << "Et" << K.get_shape().second <<std::endl;
 
-//Génération des résultats pour chaque méthode : Euler explicite, Euler implicite avec et sans le gradient conjugué.
 
+
+//Génération des résultats pour chaque méthode : Euler explicite, Euler implicite avec et sans le gradient conjugué.
 std::pair<std::vector<Cmat>, std::vector<double>> Euler= Euler_explicit(T0,K,Nt,deltat,t_min,CL);
 std::vector<Cmat> T=Euler.first;
 std::vector<double> temps=Euler.second;
@@ -120,9 +137,6 @@ std::vector<Cmat> T_imp2=Euler_imp2.first ;
 std::vector<double> temps_imp2=Euler_imp2.second ;
 T_imp2.back().affichage_mat("Retour Euler_imp_Gauss");
 save_texte(T_imp2,temps_imp2,"Euler_implicite_Gauss.txt");
-
-
-
 
 }
 }

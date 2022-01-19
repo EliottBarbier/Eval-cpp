@@ -2,8 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-tab=np.genfromtxt("build/Euler_implicite_Gauss.txt")
+"""Pour afficher l'animation de la température dans le cas d'une résolution par Euler implicite avec le pivot de Gauss"""
 
+tab=np.genfromtxt("build/Euler_implicite_Gauss.txt")
 
 print(tab.shape) #Vérification
 temps=tab[:,0] #Le tableau des temps

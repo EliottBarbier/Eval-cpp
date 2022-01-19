@@ -88,11 +88,10 @@ void Cmat::diag_sup(const double &k,const std::pair<int,int> &taille){ //On part
 
 
 std::pair<int,int> Cmat::get_shape() const{
-
     return(_taille);
 }
 
-Cmat Cmat::operator+(const Cmat &mat) const{ //On part du principe qu'elles sont de même taille, pas en place.
+Cmat Cmat::operator+(const Cmat &mat) const{
     if(_taille.first != mat._taille.first or _taille.second != mat._taille.second ){
         throw std::length_error("Les deux matrices n'ont pas la même taille pour aditionner");
     }
@@ -129,7 +128,7 @@ Cmat Cmat::operator-(const Cmat &mat) const{
     return(final);
 }
 
-Cmat Cmat::operator*(const Cmat &mat) const{ //C'est bien dans l'ordre, on suppose que le nb de colonnes première correspond nb lignes deuxième.
+Cmat Cmat::operator*(const Cmat &mat) const{ 
         if(_taille.second != mat._taille.first){
         throw std::length_error("Les tailles ne correspondent pas pour la multiplication matricielle");
     }
@@ -165,27 +164,6 @@ Cmat Cmat::operator*(const Cmat &mat) const{ //C'est bien dans l'ordre, on suppo
      final._taille=_taille;
      return(final);
  }
-//Cmat Cmat::operator=(Cmat &mat){
-//    Cmat final;
-//    final._matrice=mat._matrice;
-//    final._taille=mat._taille;
-//    return(final);
-//}
-
-Cmat Cmat::scalar(const double &k){
-    Cmat final;
-    for(int i=0; i<=_taille.first-1;i++){
-        std::vector<double> ligne;
-        for(int j=0; j<=_taille.second-1;j++){
-            ligne.push_back(k*_matrice[i][j]);
-        }
-    final._matrice.push_back(ligne);
-    }
-
-    final._taille=_taille;
-    return(final);
-}
-
 
 Cmat Cmat::transpose(){
     Cmat final;

@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
+"""Pour afficher l'animation de la température dans le cas d'une résolution par Euler explicite"""
+
 tab=np.genfromtxt("build/Euler_explicite.txt")
 
 

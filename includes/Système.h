@@ -8,4 +8,4 @@ std::pair<int,float> max_col(const int &i_deb, const int &j, const Cmat &A);
 
 Cmat inversion_mat(const Cmat &A); //Inverse la matrice inversible grâce au pivot de Gauss (matrice augmentée)
 
-Cmat sol(const Cmat &A, const Cmat&b); //La matrice K est inversible car de rang n !, donc on peut l'inverser
+Cmat sol(const Cmat &A, const Cmat&b); //La matrice M=Id+cste*K est inversible car de rang n, donc on peut l'inverser

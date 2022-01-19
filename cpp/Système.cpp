@@ -3,7 +3,7 @@
 
 Cmat grad_conju(const Cmat &A,const Cmat &x0,const Cmat &b){ //A doit être r&elle symétriue positive ! Ax=b
 
-Cmat r = b - (A*x0); //J'ai l'impression qu'il respecte les priorités ??
+Cmat r = b - (A*x0);
 Cmat p=r;
 
 double beta;
@@ -11,7 +11,10 @@ double alpha;
 int k=0;
 Cmat x = x0;
 Cmat r2;
-while(r.norme() >= 0.0001 or k==0){
+while(r.norme() >= 0.0001 or k==0){ //La valeur de seuil pour r a été choisie de manière complètement arbitraire, 
+                                    //pour avoir une précision suffisante sur la solution.
+                   
+    //L'algorithme appliqué est celui de wikipédia
     alpha = (r.transpose()*r).get_val(0,0)/((p.transpose()*A)*p).get_val(0,0);
     x=x+(p*alpha);
     r2=r-((A*p)*alpha);
@@ -24,11 +27,14 @@ while(r.norme() >= 0.0001 or k==0){
 return(x);
 }
 
-Cmat pivot_gauss(Cmat A){ //Pour trouver sa forme échelonnée réduite
+Cmat pivot_gauss(Cmat A){ //Pour trouver la forme échelonnée réduite d'une matrice A. On la recopie comme ça on peut la modifier
+                          // directement sans craindre de changer la référence.
+    
+    //Algorithme trouvé sur Internet :
     int r=0;
     std::pair<int,int> taille=A.get_shape();
     for(int j=0;j<=taille.second-1;j++){
-        if (r<=taille.first-1){ // r est plus petit que l'indice max de la ligne
+        if (r<=taille.first-1){ // Si r est plus petit que l'indice max de la ligne
         std::pair<int,int> result=max_col(r,j,A);
         int k = result.first;
         
@@ -53,7 +59,8 @@ Cmat pivot_gauss(Cmat A){ //Pour trouver sa forme échelonnée réduite
     return(A);
 }
 
-std::pair<int,float> max_col(const int &i_deb,const int &j, const Cmat &A){
+std::pair<int,float> max_col(const int &i_deb,const int &j, const Cmat &A){ //Permet de trouver l'indice et la valeur du maximum
+//en valeur absolue d'une colonne, en partant de l'indice i_deb inclus pour les lignes.
     std::pair<int,int> taille=A.get_shape();
     double max=abs(A.get_val(i_deb,j));
     int k=i_deb;
@@ -68,6 +75,7 @@ std::pair<int,float> max_col(const int &i_deb,const int &j, const Cmat &A){
 
 
 Cmat inversion_mat(const Cmat &A){
+    //Inverse la matrice A en utilisant la méthode de la matrice augmentée et le pivot de Gauss sur cette dernière.
     Cmat mat_augmente = A.augmente();
     Cmat piv;
     piv=pivot_gauss(mat_augmente);
@@ -86,6 +94,7 @@ Cmat inversion_mat(const Cmat &A){
 }
 
 Cmat sol(const Cmat &A, const Cmat&b){
+    //Résoud le système linéaire Mx=b en inversant M, puisque dans notre cas, la matrice M=Id+cst*K est toujours inversible
     Cmat inv = inversion_mat(A);
     return(inv*b);
 }
