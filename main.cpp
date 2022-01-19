@@ -10,15 +10,15 @@
 //Fonctionnement du code :
 //Pour le lancer, se rendre dans build et exécuter eval. Au niveau des arguments, eval prend un *char.
 
-//Pour le *char : On met se qu'on veut faire parmi : test_mat, test_euler, test_syst, test_lim, Q1 et Q4
+//Pour le *char : On met se qu'on veut faire parmi : test_mat, test_euler, test_syst, test_lim, Q1 et Qb1
 //test_mat permet de tester le fonctionnement de la classe Cmat
 //test_syst permet de tester le fonctionnement des solveurs de système linéaires.
 //test_lim permet de vérifier si deltat <= deltax^2/2
 //test_euler est vide.
 // Q1 pour que les questions 1 à 3 seront exécutées avec la matrice K symétrique
-// Q4 :Idem mais la matrice K devient alors aléatoire
+// Qb1 :Idem mais la matrice K devient alors aléatoire (question bonus 1)
 
-//Exemples : .\eval Q1 --> lance les premières questions
+//Exemples : .\eval Q1 --> lance les premières questions (1 à 4)
 //.\eval test_syst --> lance le test des solveurs
 
 int main(int arc,char** argv){
@@ -67,7 +67,7 @@ K = ((id + mat_sup + mat_sup.transpose())*(1./std::pow(deltax,2.)))*(-1); //La c
                                                                           // prendre -K. 
 //
 }
-else if(argQ=="Q4"){
+else if(argQ=="Qb1"){
     std::random_device rd;
     std::default_random_engine eng(rd());
     std::uniform_real_distribution<> distr(0.5, 1.5);
